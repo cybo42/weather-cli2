@@ -49,6 +49,38 @@ brews:
     test: |
       system "#{bin}/weather-cli --version"
 
+nfpms:
+  - 
+    id: packages
+    package_name: weather-cli
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    vendor: cybo42
+    homepage: https://github.com/cybo42/weather-cli
+    maintainer: cybo42 <cybo42@example.com>
+    description: A simple CLI application for weather information
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    
+    # Dependencies and recommendations for the package
+    dependencies:
+      - git
+    
+    # Version schema
+    version_metadata: git
+    
+    # RPM specific
+    rpm:
+      group: Applications/System
+    
+    # DEB specific
+    deb:
+      lintian_overrides:
+        - statically-linked-binary
+        - changelog-file-missing-in-native-package
+
 # The lines beneath this are called `modelines`. See `:help modeline`
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
