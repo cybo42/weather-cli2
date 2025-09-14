@@ -7,11 +7,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Version is set during build using ldflags
+var Version = "dev"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "weather-cli",
-	Short: "A simple CLI application",
-	Long:  `A simple CLI application that prints "hello world".`,
+	Use:     "weather-cli",
+	Version: Version,
+	Short:   "A simple CLI application",
+	Long:    `A simple CLI application that prints "hello world".`,
 	// Run is the function that will be called when the command is executed
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("hello world")
