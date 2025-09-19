@@ -32,8 +32,8 @@ archives:
       {{- if .Arm }}v{{ .Arm }}{{ end }}
     # use zip for windows archives
     format_overrides:
-    - goos: windows
-      format: zip
+      - goos: windows
+        format: zip
 
 brews:
   - name: weather-cli
@@ -51,8 +51,7 @@ brews:
       system "#{bin}/weather-cli --version"
 
 nfpms:
-  - 
-    id: packages
+  - id: packages
     package_name: weather-cli
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     vendor: cybo42
@@ -81,6 +80,19 @@ nfpms:
       lintian_overrides:
         - statically-linked-binary
         - changelog-file-missing-in-native-package
+publishers:
+  - name: nexus
+    cmd: >-
+      curl -k -u "{{ .Env.NEXUS_USERNAME }}:{{ .Env.NEXUS_PASSWORD }}"
+      -X POST
+      -H "Accept: application/json"
+      -H "Content-Type: multipart/form-data"
+      https://morpheus.springhare-koi.ts.net/repository/raw/
+      -F "raw.directory={{ tolower .Env.PROJECT_KEY }}/{{ tolower .ProjectName }}/{{ .Version }}"
+      -F "raw.asset1=@{{ .ArtifactName }};type=application/gzip"
+      -F "raw.asset1.filename={{ .ArtifactName }}"
+    dir: "{{ dir .ArtifactPath }}"
+
 
 # The lines beneath this are called `modelines`. See `:help modeline`
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json

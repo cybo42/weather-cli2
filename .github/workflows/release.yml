@@ -37,8 +37,4 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.PUB_TOKEN }}
-      - name: Upload binaries to release
-        run: |
-          ls -l
-          find . -name "*.rpm"
 
