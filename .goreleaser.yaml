@@ -36,16 +36,6 @@ archives:
       format: zip
 
 brews:
-  - repository:
-      owner: cybo42
-      name: tap-fork
-      branch: "{{.ProjectName}}-{{.Version}}"
-      pull_request:
-        enabled: true
-        base:
-          owner: cybo42
-          name: demo-homebrew-tap
-          branch: main
   - name: weather-cli
     homepage: "https://github.com/cybo42/weather-cli"
     description: "A simple CLI application that prints hello world"
