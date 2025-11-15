@@ -42,7 +42,6 @@ brews:
     license: "MIT"
     tap:
       owner: cybo42
-      name: demo-homebrew-tap
       name: homebrew-tap
       token: "{{ .Env.GITHUB_TOKEN }}"
     folder: Formula
