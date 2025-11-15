@@ -1,9 +1,20 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
     - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+
 builds:
   - env:
       - CGO_ENABLED=0
@@ -21,8 +32,8 @@ builds:
     binary: weather-cli
 
 archives:
-  - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of uname.
+  - formats: [tar.gz]
+    # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
       {{- title .Os }}_
@@ -33,68 +44,61 @@ archives:
     # use zip for windows archives
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 
-brews:
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+# brews:
+#   - name: weather-cli
+#     homepage: "https://github.com/cybo42/weather-cli"
+#     description: "A simple CLI application that prints hello world"
+#     license: "MIT"
+#     tap:
+#       owner: cybo42
+#       name: homebrew-tap
+#       token: "{{ .Env.GITHUB_TOKEN }}"
+#     folder: Formula
+#     install: |
+#       bin.install "weather-cli"
+#     test: |
+#       system "#{bin}/weather-cli --version"
+
+homebrew_casks:
   - name: weather-cli
     homepage: "https://github.com/cybo42/weather-cli"
     description: "A simple CLI application that prints hello world"
     license: "MIT"
-    tap:
-      owner: cybo42
-      name: homebrew-tap
-      token: "{{ .Env.GITHUB_TOKEN }}"
-    folder: Formula
-    install: |
-      bin.install "weather-cli"
-    test: |
-      system "#{bin}/weather-cli --version"
+    directory: Casks
 
-nfpms:
-  - id: packages
-    package_name: weather-cli
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    vendor: cybo42
-    homepage: https://github.com/cybo42/weather-cli
-    maintainer: cybo42 <cybo42@example.com>
-    description: A simple CLI application for weather information
-    license: MIT
-    formats:
-      - deb
-      - rpm
-    bindir: /usr/bin
-    
-    # Dependencies and recommendations for the package
-    dependencies:
-      - git
-    
-    # Version schema
-    version_metadata: git
-    
-    # RPM specific
-    rpm:
-      group: Applications/System
-    
-    # DEB specific
-    deb:
-      lintian_overrides:
-        - statically-linked-binary
-        - changelog-file-missing-in-native-package
-# publishers:
-#   - name: nexus
-#     cmd: >-
-#       curl -k -u "{{ .Env.NEXUS_USERNAME }}:{{ .Env.NEXUS_PASSWORD }}"
-#       -X POST
-#       -H "Accept: application/json"
-#       -H "Content-Type: multipart/form-data"
-#       https://morpheus.springhare-koi.ts.net/repository/raw/
-#       -F "raw.directory={{ tolower .Env.PROJECT_KEY }}/{{ tolower .ProjectName }}/{{ .Version }}"
-#       -F "raw.asset1=@{{ .ArtifactName }};type=application/gzip"
-#       -F "raw.asset1.filename={{ .ArtifactName }}"
-#     dir: "{{ dir .ArtifactPath }}"
+    binaries:
+      - wea
+    hooks:
+      post:
+        # replace foo with the actual binary name
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/weather-cli"]
+            end
+
+    url:
+      # URL which is determined by the given Token (github, gitlab or gitea).
+      #
+      # Default depends on the client.
+      # Templates: allowed.
+      # https://github.com/cybo42/weather-cli2/releases/download/v1.2.8/weather-cli2_Darwin_x86_64.tar.gz
+      template: "https://github.com/cybo42/weather-cli2/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+      verified: "github.com/cybo42/weather-cli2/"
+      using: ":homebrew_curl"
 
 
-# The lines beneath this are called `modelines`. See `:help modeline`
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+release:
+  footer: >-
 
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
