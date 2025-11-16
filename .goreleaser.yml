@@ -43,7 +43,14 @@ homebrew_casks:
       owner: cybo42
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-      branch: main
+      # branch: main
+      branch: "{{.ProjectName}}-{{.Version}}"
+      pull_request:
+        enabled: true
+        #base:
+          #owner: mike
+          #name: repo
+          #branch: main      
     commit_author:
       name: goreleaserbot
       email: bot@goreleaser.com
