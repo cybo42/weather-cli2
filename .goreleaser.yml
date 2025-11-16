@@ -36,7 +36,7 @@ release:
   prerelease: auto
 brews:
   - name: weather-cli
-    tap:
+    repository:
       owner: cybo42
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
