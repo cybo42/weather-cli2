@@ -1,0 +1,62 @@
+# .goreleaser.yml
+project_name: weather-cli
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: .
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+release:
+  github:
+    owner: cybo42
+    name: weather-cli2
+  prerelease: auto
+brews:
+  - name: weather-cli
+    tap:
+      owner: cybo42
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    homepage: "https://github.com/cybo42/weather-cli2"
+    description: "A CLI to get weather forecasts."
+    license: "MIT" # You might want to update this
+    install: |
+      bin.install "weather-cli"
+nfpms:
+  - id: weather-cli
+    package_name: weather-cli
+    vendor: cybo42
+    homepage: "https://github.com/cybo42/weather-cli2"
+    maintainer: "cybo42 <your-email@example.com>" # You might want to update this
+    description: "A CLI to get weather forecasts."
+    license: "MIT" # You might want to update this
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin
