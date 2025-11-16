@@ -14,8 +14,11 @@ builds:
       - amd64
       - arm64
     main: .
+    # ldflags:
+      # - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
     ldflags:
-      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+      - -s -w -X weather-cli/cmd.Version={{.Version}}
+
 archives:
   - format: tar.gz
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
