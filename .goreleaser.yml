@@ -52,6 +52,13 @@ homebrew_casks:
       template: "https://github.com/cybo42/weather-cli2/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
       verified: "github.com/cybo42/weather-cli2/"
     license: "MIT" # You might want to update this
+    hooks:
+      post:
+        # replace foo with the actual binary name
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/foo"]
+          end    
 nfpms:
   - id: weather-cli
     package_name: weather-cli
