@@ -34,7 +34,7 @@ release:
     owner: cybo42
     name: weather-cli2
   prerelease: auto
-brews:
+homebrew_casks:
   - name: weather-cli
     repository:
       owner: cybo42
@@ -46,9 +46,12 @@ brews:
       email: bot@goreleaser.com
     homepage: "https://github.com/cybo42/weather-cli2"
     description: "A CLI to get weather forecasts."
+    binaries:
+      - weather-cli
+    url:
+      template: "https://github.com/cybo42/weather-cli2/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+      verified: "github.com/cybo42/weather-cli2/"
     license: "MIT" # You might want to update this
-    cask:
-      name: weather-cli
 nfpms:
   - id: weather-cli
     package_name: weather-cli
