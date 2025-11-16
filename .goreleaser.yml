@@ -40,14 +40,15 @@ brews:
       owner: cybo42
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+      branch: main
     commit_author:
       name: goreleaserbot
       email: bot@goreleaser.com
     homepage: "https://github.com/cybo42/weather-cli2"
     description: "A CLI to get weather forecasts."
     license: "MIT" # You might want to update this
-    install: |
-      bin.install "weather-cli"
+    cask:
+      name: weather-cli
 nfpms:
   - id: weather-cli
     package_name: weather-cli
